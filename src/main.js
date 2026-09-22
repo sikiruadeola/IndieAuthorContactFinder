@@ -31,9 +31,19 @@ const {
 } = input;
 
 const browser = await chromium.launch({ headless: false });
+
+const proxyConfiguration = await Actor.createProxyConfiguration({ groups: ['RESIDENTIAL'] });
+const proxyUrl = await proxyConfiguration.newUrl();
+const parsedProxy = new URL(proxyUrl);
+
 const context = await browser.newContext({
     viewport: { width: 1280, height: 800 },
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    proxy: {
+        server: `${parsedProxy.protocol}//${parsedProxy.hostname}:${parsedProxy.port}`,
+        username: parsedProxy.username,
+        password: parsedProxy.password,
+    },
 });
 const page = await context.newPage();
 
