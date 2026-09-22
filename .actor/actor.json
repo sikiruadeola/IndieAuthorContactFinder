@@ -1,0 +1,10 @@
+{
+    "actorSpecification": 1,
+    "name": "indie-author-contact-finder",
+    "title": "Indie Author Contact Finder",
+    "description": "Finds indie and self published authors through Amazon's Kindle store, their books, and a contact address where one can genuinely be found.",
+    "version": "0.0",
+    "dockerfile": "../Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {"dataset": "./dataset_schema.json"}
+}
