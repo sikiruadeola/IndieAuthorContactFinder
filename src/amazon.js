@@ -30,6 +30,13 @@ function looksBlocked(title) {
 export async function discoverBooks(page, { query, maxPages = 5 }) {
     const books = [];
 
+    // Landing cold on a deep search link, with no prior visit to the site
+    // at all, is not how a real visitor arrives. Visiting the homepage
+    // first, the way a person actually would, gives the session a normal
+    // shape before it ever touches a search page.
+    await page.goto('https://www.amazon.com/', { waitUntil: 'domcontentloaded', timeout: 45000 }).catch(() => undefined);
+    await new Promise((r) => setTimeout(r, 2000 + Math.random() * 2000));
+
     for (let p = 1; p <= maxPages; p += 1) {
         const url = `https://www.amazon.com/s?k=${encodeURIComponent(query)}&i=digital-text&page=${p}`;
         await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 }).catch(() => undefined);
