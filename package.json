@@ -1,0 +1,14 @@
+{
+    "name": "indie-author-contact-finder",
+    "version": "1.0.0",
+    "type": "module",
+    "description": "Finds indie and self published authors on Amazon, their books, and a contact address where their bio or personal site leads to one.",
+    "engines": {"node": ">=18"},
+    "dependencies": {
+        "apify": "^3.2.6",
+        "crawlee": "^3.11.5",
+        "playwright": "^1.47.0"
+    },
+    "scripts": {"start": "node src/main.js"},
+    "license": "MIT"
+}
