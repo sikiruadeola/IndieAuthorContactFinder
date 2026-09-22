@@ -1,0 +1,24 @@
+{
+    "actorSpecification": 1,
+    "fields": {},
+    "views": {
+        "overview": {
+            "title": "Authors found",
+            "transformation": {
+                "fields": ["authorName", "books", "bestEmail", "bestEmailConfidence", "bestEmailScore", "linkedSites", "authorUrl"]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "authorName": {"label": "Author"},
+                    "books": {"label": "Books"},
+                    "bestEmail": {"label": "Best email"},
+                    "bestEmailConfidence": {"label": "Confidence"},
+                    "bestEmailScore": {"label": "Score"},
+                    "linkedSites": {"label": "Website"},
+                    "authorUrl": {"label": "Amazon author page"}
+                }
+            }
+        }
+    }
+}
