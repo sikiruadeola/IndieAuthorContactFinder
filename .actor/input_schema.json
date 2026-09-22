@@ -1,47 +1,51 @@
 {
-    "title": "Indie Author Contact Finder",
-    "type": "object",
-    "schemaVersion": 1,
-    "properties": {
-        "query": {
-            "title": "Genre or keyword to search",
-            "type": "string",
-            "description": "Whatever you would type into the Kindle store search bar. Adding a phrase like self published tends to surface more indie titles.",
-            "editor": "textfield",
-            "default": "self published fantasy novel"
-        },
-        "maxSearchPages": {
-            "title": "Maximum search result pages",
-            "type": "integer",
-            "description": "How many pages of Kindle store search results to walk through.",
-            "editor": "number",
-            "default": 5
-        },
-        "maxAuthors": {
-            "title": "Maximum authors to process (0 = unlimited)",
-            "type": "integer",
-            "editor": "number",
-            "default": 0
-        },
-        "crawlAuthorSites": {
-            "title": "Also read the author's own website",
-            "type": "boolean",
-            "description": "Follows the plain text website address if one is written into the author bio.",
-            "default": true
-        },
-        "maxPagesPerSite": {
-            "title": "Maximum pages per website",
-            "type": "integer",
-            "editor": "number",
-            "default": 4
-        },
-        "minimumScore": {
-            "title": "Minimum quality score to keep an address",
-            "type": "integer",
-            "description": "Zero to one hundred. Fifty five keeps medium and high confidence, seventy five keeps high confidence only.",
-            "editor": "number",
-            "default": 0
-        }
+  "title": "Indie Author Contact Finder",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "query": {
+      "title": "Genre or keyword to search",
+      "type": "string",
+      "description": "Whatever you would type into the Kindle store search bar. Adding a phrase like self published tends to surface more indie titles.",
+      "editor": "textfield",
+      "default": "self published fantasy novel"
     },
-    "required": ["query"]
+    "maxSearchPages": {
+      "title": "Maximum search result pages",
+      "type": "integer",
+      "description": "How many pages of Kindle store search results to walk through.",
+      "editor": "number",
+      "default": 5
+    },
+    "maxAuthors": {
+      "title": "Maximum authors to process (0 = unlimited)",
+      "type": "integer",
+      "description": "Stop after this many new authors have been processed in this run.",
+      "editor": "number",
+      "default": 0
+    },
+    "crawlAuthorSites": {
+      "title": "Also read the author's own website",
+      "type": "boolean",
+      "description": "Follows the plain text website address if one is written into the author bio.",
+      "default": true
+    },
+    "maxPagesPerSite": {
+      "title": "Maximum pages per website",
+      "type": "integer",
+      "description": "Budget of pages per website when the author's own site is crawled.",
+      "editor": "number",
+      "default": 4
+    },
+    "minimumScore": {
+      "title": "Minimum quality score to keep an address",
+      "type": "integer",
+      "description": "Zero to one hundred. Fifty five keeps medium and high confidence, seventy five keeps high confidence only.",
+      "editor": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "query"
+  ]
 }
