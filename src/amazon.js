@@ -36,7 +36,9 @@ export async function discoverBooks(page, { query, maxPages = 5 }) {
 
         const title = await page.title().catch(() => '');
         if (looksBlocked(title)) {
-            log.warning(`Search page ${p} looked blocked (title: "${title}"). Stopping here.`);
+            const bodyText = await page.evaluate(() => document.body.innerText.slice(0, 500)).catch(() => '');
+            const url = page.url();
+            log.warning(`Search page ${p} looked blocked (title: "${title}"). Landed on: ${url}. Body starts with: ${bodyText}`);
             break;
         }
 
