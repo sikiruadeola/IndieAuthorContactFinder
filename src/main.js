@@ -31,21 +31,34 @@ const {
 } = input;
 
 const browser = await chromium.launch({ headless: false });
-
 const proxyConfiguration = await Actor.createProxyConfiguration({ groups: ['RESIDENTIAL'] });
-const proxyUrl = await proxyConfiguration.newUrl();
-const parsedProxy = new URL(proxyUrl);
 
-const context = await browser.newContext({
-    viewport: { width: 1280, height: 800 },
-    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    proxy: {
-        server: `${parsedProxy.protocol}//${parsedProxy.hostname}:${parsedProxy.port}`,
-        username: parsedProxy.username,
-        password: parsedProxy.password,
-    },
-});
-const page = await context.newPage();
+async function newContextWithFreshProxy() {
+    const proxyUrl = await proxyConfiguration.newUrl();
+    const p = new URL(proxyUrl);
+    return browser.newContext({
+        viewport: { width: 1280, height: 800 },
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        proxy: { server: `${p.protocol}//${p.hostname}:${p.port}`, username: p.username, password: p.password },
+    });
+}
+
+// Some fraction of any residential pool will simply be flagged already,
+// the same variance already proven true on the Kickstarter tool. The fix
+// there was the same as here: a fresh address on the next attempt, not
+// giving up on the first bad one.
+let context;
+let page;
+for (let attempt = 1; attempt <= 4; attempt += 1) {
+    context = await newContextWithFreshProxy();
+    page = await context.newPage();
+    await page.goto('https://www.amazon.com/', { waitUntil: 'domcontentloaded', timeout: 45000 }).catch(() => undefined);
+    const title = await page.title().catch(() => '');
+    if (!/sorry|something went wrong|robot check/i.test(title || '')) break;
+    log.info(`Address ${attempt} looked flagged on the homepage already, trying a fresh one.`);
+    await context.close().catch(() => undefined);
+    if (attempt === 4) throw new Error('Four fresh addresses in a row were all flagged before even reaching a search page.');
+}
 
 const store = await Actor.openKeyValueStore('INDIE-AUTHOR-STATE', { forceCloud: true });
 const savedState = (await store.getValue('SEEN_AUTHORS')) || { seen: [] };
