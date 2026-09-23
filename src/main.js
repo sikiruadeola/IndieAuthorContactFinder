@@ -65,7 +65,17 @@ const savedState = (await store.getValue('SEEN_AUTHORS')) || { seen: [] };
 const seenAuthors = new Set(savedState.seen || []);
 
 log.info(`Searching the Kindle store for: ${query}`);
-const books = await discoverBooks(page, { query, maxPages: maxSearchPages });
+let books = [];
+for (let attempt = 1; attempt <= 3; attempt += 1) {
+    books = await discoverBooks(page, { query, maxPages: maxSearchPages });
+    if (books.length > 0) break;
+
+    log.info(`Nothing usable came back, likely another flagged address. Trying a fresh one, attempt ${attempt} of 3.`);
+    await context.close().catch(() => undefined);
+    context = await newContextWithFreshProxy();
+    page = await context.newPage();
+    await page.goto('https://www.amazon.com/', { waitUntil: 'domcontentloaded', timeout: 45000 }).catch(() => undefined);
+}
 log.info(`Found ${books.length} book listings with a linked author page.`);
 
 const byAuthor = new Map();
